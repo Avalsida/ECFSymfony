@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'room_detail'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5 content-container" style="overflow-y: auto; height: 100vh;">
+    {% if room %}
+        <h1>{{ room.nom }}</h1>
+        <h3>{{ 'capacity'|trans }}: {{ room.capacite }}</h3>
+        <h3>{{ 'equipments'|trans }}: {{ room.equipements|join(', ') }}</h3>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="alert alert-info">
+                <p><strong>{{ 'admin_instructions'|trans }}</strong></p>
+                <ul>
+                    <li>{{ 'admin_mark_unavailable'|trans }}</li>
+                    <li>{{ 'admin_confirm_unavailability'|trans }}</li>
+                    <li>{{ 'admin_delete_unavailability'|trans }}</li>
+                    <li>{{ 'admin_cannot_manage_reservations'|trans }}</li>
+                </ul>
+            </div>
+        {% endif %}
+
+        <div id="calendar" class="mb-4"></div>
+
+        <!-- Modal pour marquer une période comme indisponible -->
+        <div id="unavailabilityModal" class="modal fade" tabindex="-1" aria-labelledby="unavailabilityModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="unavailabilityModalLabel">{{ 'mark_as_unavailable'|trans }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="unavailabilityForm" method="POST" action="{{ path('admin_add_unavailable', {'id': room.id, '_locale': app.request.locale}) }}">
+                            <input type="hidden" name="start" id="unavailabilityStart">
+                            <input type="hidden" name="end" id="unavailabilityEnd">
+                            <p id="unavailabilityDetails"></p>
+                        </form>
+                        <form id="deleteUnavailabilityForm" method="POST" action="{{ path('admin_delete_unavailable', {'id': room.id, '_locale': app.request.locale}) }}">
+                            <input type="hidden" name="availabilityId" id="unavailabilityId">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
+                        <button type="submit" form="unavailabilityForm" class="btn btn-primary">{{ 'confirm'|trans }}</button>
+                        <button type="submit" form="deleteUnavailabilityForm" class="btn btn-danger">{{ 'delete'|trans }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var calendarEl = document.getElementById('calendar');
+                var style = document.createElement('style');
+            style.innerHTML = `
+                .fc-day-sat, .fc-day-sun {
+                    background-color: lightgray !important;
+                }
+            `;
+            document.head.appendChild(style);
+
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'timeGridWeek',
+                    slotDuration: '00:30:00',
+                    slotMinTime: '08:00:00',
+                    slotMaxTime: '19:00:00',
+                    allDaySlot: false,
+                    minDate: new Date(),
+                    selectable: {{ is_granted('ROLE_ADMIN') ? 'true' : 'false' }},
+                    selectAllow: function(selectInfo) {
+                        var day = selectInfo.start.getUTCDay();
+                        return day !== 0 && day !== 6; // Bloquer les sélections pour les dimanches (0) et samedis (6)
+                    },
+                    events: [
+                        {% for reservation in reservations %}
+                            {
+                                title: '{{ reservation.user.nom }} {{ reservation.user.prenom }}',
+                                start: '{{ reservation.dateReservation|date('Y-m-d') }}T{{ reservation.heureDebut|date('H:i') }}',
+                                end: '{{ reservation.dateReservation|date('Y-m-d') }}T{{ reservation.heureFin|date('H:i') }}',
+                                backgroundColor: 'blue',
+                                borderColor: 'blue',
+                                textColor: 'white'
+                            },
+                        {% endfor %}
+                        {% for availability in availabilities %}
+                            {
+                                title: '{{ 'unavailable'|trans }}',
+                                start: '{{ availability.dateReservation|date('Y-m-d') }}T{{ availability.heureDebut|date('H:i') }}',
+                                end: '{{ availability.dateReservation|date('Y-m-d') }}T{{ availability.heureFin|date('H:i') }}',
+                                backgroundColor: 'red',
+                                borderColor: 'red',
+                                textColor: 'white',
+                                id: '{{ availability.id }}' // Ajouter l'ID de l'indisponibilité
+                            },
+                        {% endfor %}
+                    ],
+                    select: function(info) {
+                        var start = new Date(info.startStr);
+                        var end = new Date(info.endStr);
+
+                        // Formater les dates pour l'affichage dans la modal
+                        var options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+                        var startFormatted = start.toLocaleString('{{ app.request.locale }}', options);
+                        var endFormatted = end.toLocaleString('{{ app.request.locale }}', options);
+
+                        // Remplir les détails de l'indisponibilité dans le formulaire
+                        document.getElementById('unavailabilityStart').value = info.startStr;
+                        document.getElementById('unavailabilityEnd').value = info.endStr;
+                        document.getElementById('unavailabilityDetails').innerText = '{{ 'unavailability_from'|trans }} ' + startFormatted + ' {{ 'to'|trans }} ' + endFormatted;
+
+                        // Réinitialiser l'ID de l'indisponibilité
+                        document.getElementById('unavailabilityId').value = '';
+
+                        // Afficher la modal de confirmation
+                        var unavailabilityModal = new bootstrap.Modal(document.getElementById('unavailabilityModal'));
+                        unavailabilityModal.show();
+                    },
+                    eventClick: function(info) {
+                        if (info.event.backgroundColor === 'red') { // Vérifier si l'événement est une indisponibilité
+                            document.getElementById('unavailabilityId').value = info.event.id;
+
+                            // Remplir les détails de l'indisponibilité dans le formulaire pour la suppression
+                            document.getElementById('unavailabilityStart').value = info.event.start.toISOString();
+                            document.getElementById('unavailabilityEnd').value = info.event.end.toISOString();
+                            var options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+                            var startFormatted = info.event.start.toLocaleString('{{ app.request.locale }}', options);
+                            var endFormatted = info.event.end.toLocaleString('{{ app.request.locale }}', options);
+                            document.getElementById('unavailabilityDetails').innerText = '{{ 'unavailability_from'|trans }} ' + startFormatted + ' {{ 'to'|trans }} ' + endFormatted;
+
+                            var unavailabilityModal = new bootstrap.Modal(document.getElementById('unavailabilityModal'));
+                            unavailabilityModal.show();
+                        }
+                    }
+                });
+
+                calendar.render();
+            });
+        </script>
+    {% else %}
+        <p>{{ 'room_not_found'|trans }}</p>
+    {% endif %}
+</div>
+{% endblock %}

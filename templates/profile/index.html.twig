@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'profile'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5 content-container">
+    <h1 class="text-center mb-4">{{ 'my_profile'|trans }}</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">{{ 'personal_information'|trans }}</h5>
+            <p class="card-text"><strong>{{ 'last_name'|trans }} :</strong> {{ user.nom }}</p>
+            <p class="card-text"><strong>{{ 'first_name'|trans }} :</strong> {{ user.prenom }}</p>
+            <p class="card-text"><strong>{{ 'birthdate'|trans }} :</strong> {{ user.dateNaissance|date('d/m/Y') }}</p>
+            <p class="card-text"><strong>{{ 'email'|trans }} :</strong> {{ user.email }}</p>
+            <p class="card-text"><strong>{{ 'address'|trans }} :</strong> {{ user.adresse }}</p>
+            <p class="card-text"><strong>{{ 'postal_code'|trans }} :</strong> {{ user.codePostal }}</p>
+            <p class="card-text"><strong>{{ 'city'|trans }} :</strong> {{ user.ville }}</p>
+            <p class="card-text"><strong>{{ 'phone_number'|trans }} :</strong> {{ user.numeroTelephone }}</p>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <div>
+            <a href="{{ path('user_profile_edit', {'_locale': app.request.locale}) }}" class="btn btn-primary">{{ 'edit_information'|trans }}</a>
+        </div>
+        <div>
+            <a href="{{ path('user_subscriptions', {'_locale': app.request.locale}) }}" class="btn btn-secondary">{{ 'my_subscriptions'|trans }}</a>
+            <a href="{{ path('user_book_loans', {'_locale': app.request.locale}) }}" class="btn btn-secondary">{{ 'my_books'|trans }}</a>
+            <a href="{{ path('user_room_reservations', {'_locale': app.request.locale}) }}" class="btn btn-secondary">{{ 'my_reservations'|trans }}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

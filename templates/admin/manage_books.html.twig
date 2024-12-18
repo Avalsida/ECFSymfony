@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Livres{% endblock %}
+
+{% block body %}
+<div class="container mt-5 content-container" style="overflow-y: auto; height: 100vh;">
+    <h1>Liste des Livres</h1>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Année de Publication</th>
+                <th>Note Moyenne</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+                <tr>
+                    <td>{{ book.titre }}</td>
+                    <td>{{ book.auteur }}</td>
+                    <td>{{ book.anneePublication }}</td>
+                    <td>
+                        {% if bookNotes[book.id] is not empty %}
+                            {{ bookNotes[book.id]|number_format(2) }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ path('admin_book_reviews', {'id': book.id}) }}" class="btn btn-primary">Gérer les Commentaires</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

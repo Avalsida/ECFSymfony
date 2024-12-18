@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'home'|trans }} - {{ 'library'|trans }}{% endblock %}
+
+{% block page_class %}index-content{% endblock %}
+
+{% block body %}
+<div class="d-flex align-items-center justify-content-center text-center" style="height: 100%;">
+    <div>
+        <h1>{{ 'welcome_library'|trans }}</h1>
+        <p>{{ 'description_site'|trans }}</p>
+
+        <a class="btn btn-primary" href="{{ path('app_books', {'_locale': app.request.locale}) }}">{{ 'link_catalog'|trans }}</a>
+        <a href="{{ path('app_reservation', {'_locale': app.request.locale}) }}" class="btn btn-secondary">{{ 'link_rooms'|trans }}</a>
+    </div>
+</div>
+{% endblock %}

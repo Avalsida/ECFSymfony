@@ -1,0 +1,76 @@
+/* Styles généraux */
+body {
+    background-color: skyblue;
+}
+
+.background-container {
+    background-image: url('../images/bibliothèque.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+
+.content-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.index-content {
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+/* Styles pour l'élément de notation */
+#rating {
+    display: flex;
+    flex-direction: row;
+    width: 200px;
+    height: 40px;
+    background-color: #f0f0f0;
+  }
+
+  #rating {
+    display: flex;
+    margin: auto;
+    flex-direction: row;
+    width: 200px;
+    height: 40px;
+    background-color: #f0f0f0;
+  }
+  
+  .star {
+    font-size: 30px;
+    cursor: pointer;
+    color: #ccc; /* Couleur des étoiles non sélectionnées */
+  }
+  
+  .star.selected,
+  .star:hover,
+  .star:hover ~ .star {
+    color: #f39c12; /* Couleur des étoiles sélectionnées */
+  }
+
+  .star-value {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+}
+
+  
+  
+  

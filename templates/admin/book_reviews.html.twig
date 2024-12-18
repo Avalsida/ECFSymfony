@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commentaires pour {{ book.titre }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5 content-container">
+{% for label, messages in app.flashes %} 
+{% if label starts with 'admin_' %} 
+<div class="alert alert-{{ label == 'admin_success' ? 'success' : 'danger' }}"> 
+{% for message in messages %} <p>{{ message }}</p>
+{% endfor %} 
+</div>
+ {% endif %} 
+ {% endfor %}
+    <h2>Commentaires pour {{ book.titre }}</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Utilisateur</th>
+                <th>Commentaire</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in reviews %}
+            <tr>
+                <td>{{ review.user.nom }}</td>
+                <td>{{ review.commentaire }}</td>
+                <td>{{ review.dateCommentaire|date('d-m-Y H:i') }}</td>
+                <td>
+                    <form method="post" action="{{ path('admin_delete_review', {id: review.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce commentaire ?');"> 
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ review.id) }}"> 
+                        <button type="submit" class="btn btn-danger">Supprimer</button> 
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

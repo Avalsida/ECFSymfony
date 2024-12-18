@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'edit_profile'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5 content-container">
+    <h1 class="text-center">{{ 'edit_profile'|trans }}</h1>
+
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+    {% for flash_error in app.flashes('error') %}
+        <div class="alert alert-danger">{{ flash_error }}</div>
+    {% endfor %}
+
+    <div class="row">
+        <!-- Première Colonne -->
+        <div class="col-lg-6 col-md-12">
+            <div class="form-group">
+                {{ form_label(form.nom, 'last_name'|trans, {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.nom) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.prenom, 'first_name'|trans, {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.prenom) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.email, 'email'|trans, {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.email) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.current_password, 'current_password'|trans, {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.current_password, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.current_password) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.plainPassword, 'new_password'|trans, {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.plainPassword, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.plainPassword) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.confirmPassword, 'confirm_new_password'|trans, {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.confirmPassword, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.confirmPassword) }}
+            </div>
+        </div>
+
+        <!-- Deuxième Colonne -->
+        <div class="col-lg-6 col-md-12">
+            <div class="form-group">
+                {{ form_label(form.date_naissance, 'birthdate'|trans, {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.date_naissance, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.date_naissance) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.adresse, 'address'|trans, {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.adresse, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.adresse) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.code_postal, 'postal_code'|trans, {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.code_postal, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.code_postal) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.ville, 'city'|trans, {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.ville, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.ville) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.numero_telephone, 'phone_number'|trans, {'label_attr': {'class': 'control-label'}}) }}
+                {{ form_widget(form.numero_telephone, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.numero_telephone) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group mt-4">
+        <button type="submit" class="btn btn-primary">{{ 'update'|trans }}</button>
+    </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

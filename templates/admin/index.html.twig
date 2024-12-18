@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'admin_dashboard'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5 content-container">
+    <h1>{{ 'admin_dashboard'|trans }}</h1>
+    <a href="{{ path('admin_users', {'_locale': app.request.locale}) }}" class="btn btn-primary">{{ 'manage_users'|trans }}</a>
+    <a href="{{ path('admin_rooms', {'_locale': app.request.locale}) }}" class="btn btn-primary">{{ 'manage_rooms'|trans }}</a>
+    <a href="{{ path('admin_books', {'_locale': app.request.locale}) }}" class="btn btn-primary">{{ 'manage_books'|trans }}</a>
+       
+</div>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'book_details.title'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5 content-container">
+    <h3>{{ book.titre }}</h3>
+    <p>{{ 'book_details.author'|trans }} : {{ book.auteur }}</p>
+    <p>{{ 'book_details.publication_year'|trans }} : {{ book.anneePublication }}</p>
+    
+    <div>
+        <label for="rating">{{ 'book_details.rate'|trans }}</label><br>
+        <div id="rating" data-id="{{ book.id }}"> 
+          <span class="star" data-value="5">&#9733;</span><span class="star-value">5</span>
+          <span class="star" data-value="4">&#9733;</span><span class="star-value">4</span> 
+          <span class="star" data-value="3">&#9733;</span><span class="star-value">3</span> 
+          <span class="star" data-value="2">&#9733;</span><span class="star-value">2</span> 
+          <span class="star" data-value="1">&#9733;</span><span class="star-value">1</span> 
+        </div>
+    </div><br><br>
+    <h3>{{ 'book_details.comments'|trans }}</h3>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#commentsModal">
+        {{ 'book_details.view_comments'|trans }}
+    </button>
+
+    <!-- Modale -->
+    <div class="modal fade" id="commentsModal" tabindex="-1" aria-labelledby="commentsModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="commentsModalLabel">{{ 'book_details.comments'|trans }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'book_details.close'|trans }}"></button>
+          </div>
+          <div class="modal-body">
+            {% for comment in comments %}
+                <div class="comment">
+                    <p><strong>{{ comment.user.nom }}:</strong>
+                    {{ comment.commentaire }}</p>
+                    <p><small>{{ comment.dateCommentaire|date('d-m-Y H:i') }}</small></p>
+                </div>
+            {% endfor %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'book_details.close'|trans }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h4>{{ 'book_details.add_comment'|trans }}</h4> 
+    {{ form_start(form) }} 
+    {{ form_row(form.commentaire, {'attr': {'style': 'width: 100%; height: 150px;'}}) }} 
+    <button class="btn btn-primary">{{ 'book_details.send'|trans }}</button>
+    {{ form_end(form) }}
+</div>
+
+{% for label, messages in app.flashes %}
+    <div class="alert alert-{{ label }}">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+{% endfor %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var stars = document.querySelectorAll('.star');
+    var ratingContainer = document.getElementById('rating');
+    var bookId = ratingContainer.getAttribute('data-id');
+    var locale = document.documentElement.lang; // Récupérer la langue de la page
+
+    stars.forEach(function(star) {
+        star.addEventListener('click', function() {
+            var rating = this.getAttribute('data-value');
+            stars.forEach(function(s) {
+                s.classList.remove('selected');
+            });
+            for (let i = 0; i < rating; i++) {
+                stars[i].classList.add('selected');
+            }
+
+            // Envoyer la note au serveur avec la langue dans l'URL
+            fetch('/' + locale + '/books/' + bookId + '/rate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': '{{ csrf_token('rate_' ~ book.id) }}'
+                },
+                body: JSON.stringify({ rating: rating })
+            })
+            .then(response => {
+                console.log('Response Status:', response.status);
+                return response.text();  // Changez à .text() pour voir la réponse complète
+            })
+            .then(data => {
+                console.log('Response Data:', data);
+                try {
+                    var jsonData = JSON.parse(data);
+                    if (jsonData.success) {
+                        alert('{{ "book_details.rating_success"|trans }}');
+                    } else {
+                        alert('{{ "book_details.rating_error"|trans }}');
+                    }
+                } catch (e) {
+                    console.error('Error parsing JSON:', e);
+                    alert('{{ "book_details.rating_error"|trans }}');
+                }
+            })
+            .catch(error => {
+                console.error('There was a problem with your fetch operation:', error);
+                alert('{{ "book_details.rating_error"|trans }}');
+            });
+        });
+
+        star.addEventListener('mouseover', function() {
+            stars.forEach(function(s) {
+                s.classList.remove('hover');
+            });
+            for (let i = 0; i < this.getAttribute('data-value'); i++) {
+                stars[i].classList.add('hover');
+            }
+        });
+
+        star.addEventListener('mouseleave', function() {
+            stars.forEach(function(s) {
+                s.classList.remove('hover');
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

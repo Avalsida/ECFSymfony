@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'my_subscriptions'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5 content-container">
+    <h1>{{ 'my_subscriptions'|trans }}</h1>
+    
+    {% if subscriptions|length > 0 %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{{ 'type'|trans }}</th>
+                    <th>{{ 'start_date'|trans }}</th>
+                    <th>{{ 'end_date'|trans }}</th>
+                    <th>{{ 'price'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subscription in subscriptions %}
+                    <tr>
+                        <td>{{ subscription.type }}</td>
+                        <td>{{ subscription.dateDebut|date('d/m/Y') }}</td>
+                        <td>{{ subscription.dateFin|date('d/m/Y') }}</td>
+                        <td>{{ subscription.prix }} €</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>{{ 'no_subscriptions'|trans }}</p>
+    {% endif %}
+    <div>
+        <a href="{{ path('app_subscribe', {'_locale': app.request.locale}) }}" class="btn btn-primary">{{ 'subscribe_extend'|trans }}</a>
+    </div>
+</div>
+{% endblock %}

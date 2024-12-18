@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'edit_user_role'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5 content-container">
+    <h1>{{ 'edit_user_role'|trans }}</h1>
+    {{ form_start(form) }}
+        <div class="form-check">
+            {% for choice in form.roles %}
+                <div class="form-check">
+                    {{ form_widget(choice, {'attr': {'class': 'form-check-input'}}) }}
+                    {{ form_label(choice, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">{{ 'save'|trans }}</button>
+        </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

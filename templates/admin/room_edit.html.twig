@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'edit_room'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5 content-container" style="overflow-y: auto; height: 100vh;">
+    <h1>{{ 'edit_room'|trans }}</h1>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-primary mt-3">{{ 'save'|trans }}</button>
+    {{ form_end(form) }}
+
+    {% if room.image %}
+        <div class="mt-4">
+            <h4>{{ 'current_image'|trans }} :</h4>
+            <img src="{{ asset('/images/' ~ room.image) }}" alt="{{ 'room_image'|trans }}" width="200">
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

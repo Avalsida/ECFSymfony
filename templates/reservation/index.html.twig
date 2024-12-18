@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'room_reservation'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5 content-container" style="height: 100vh; overflow-y: auto">
+    <h1>{{ 'room_reservation'|trans }}</h1>
+
+    <div class="row">
+        {% for room in rooms %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="{{ asset('images/' ~ room.image) }}" class="card-img-top" alt="Image de la salle">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ room.nom }}</h5>
+                        <p class="card-text">{{ 'capacity'|trans }} : {{ room.capacite }} {{ 'people'|trans }}</p>
+                        <p class="card-text">{{ 'equipments'|trans }} : {{ room.equipements|join(', ') }}</p>
+                        <a href="{{ path('app_reservation_room', {'roomId': room.id, '_locale': app.request.locale}) }}" class="btn btn-primary mt-auto">{{ 'reserve'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

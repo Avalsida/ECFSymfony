@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'reservation_history'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5 content-container">
+    <h1>{{ 'my_reservations'|trans }}</h1>
+{% if roomReservations|length > 0 %}
+    <table class="table">
+    <thead>
+        <tr>
+            <th>{{ 'room_name'|trans }}</th>
+            <th>{{ 'date'|trans }}</th>
+            <th>{{ 'start'|trans }}</th>
+            <th>{{ 'end'|trans }}</th>
+            <th>{{ 'action'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reservation in roomReservations %}
+            <tr>
+                <td>{{ reservation.room.nom }}</td>
+                <td>{{ reservation.dateReservation|date('d/m/Y') }}</td>
+                <td>{{ reservation.heureDebut|date('H:i') }}</td>
+                <td>{{ reservation.heureFin|date('H:i') }}</td>
+                <td>
+                    <a href="{{ path('app_reservation_delete', {'reservationId': reservation.id, '_locale': app.request.locale}) }}" class="btn btn-danger" onclick="return confirm('{{ 'confirm_delete_reservation'|trans }}');">{{ 'delete'|trans }}</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+  {% else %}
+        <p>{{ 'no_reservations_found'|trans }}</p>
+    {% endif %}
+    <div>
+        <a href="{{ path('app_reservation', {'_locale': app.request.locale}) }}" class="btn btn-primary">{{ 'reserve_room'|trans }}</a>
+    </div>
+</div>
+{% endblock %}

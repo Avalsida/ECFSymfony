@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'manage_rooms'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mt-6 content-container" style="height: 100vh; overflow-y: auto">
+    <h1>{{ 'manage_rooms'|trans }}</h1>
+    <a href="{{ path('admin_room_new', {'_locale': app.request.locale}) }}" class="btn btn-primary mb-3">{{ 'add_room'|trans }}</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>{{ 'image'|trans }}</th>
+                <th>{{ 'name'|trans }}</th>
+                <th>{{ 'capacity'|trans }}</th>
+                <th>{{ 'equipments'|trans }}</th>
+                <th>{{ 'actions'|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for room in rooms %}
+                <tr>
+                    <td>{% if room.image %}<img src="{{ asset('/images/' ~ room.image) }}" alt="{{ 'room_image'|trans }}" width="100">{% else %}{{ 'no_image'|trans }}{% endif %}</td>
+                    <td>{{ room.nom }}</td>
+                    <td>{{ room.capacite }}</td>
+                    <td>{{ room.equipements|join(', ') }}</td>
+                    <td>
+                        <a href="{{ path('admin_room_details', {'id': room.id, '_locale': app.request.locale}) }}" class="btn btn-info btn-sm">{{ 'disponibility'|trans }}</a>
+                        <a href="{{ path('admin_room_edit', {'id': room.id, '_locale': app.request.locale}) }}" class="btn btn-warning btn-sm">{{ 'edit'|trans }}</a>
+                        <a href="{{ path('admin_room_delete', {'id': room.id, '_locale': app.request.locale}) }}" class="btn btn-danger btn-sm" onclick="return confirm('{{ 'confirm_delete_room'|trans }}');">{{ 'delete'|trans }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,5 +1,14 @@
 controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+    resource: ../src/Controller/
     type: attribute
+    prefix: /{_locale}
+    requirements:
+        _locale: en|fr
+    defaults:
+        _locale: 'fr'
+
+change_language:
+    path: /change-language/{_locale}
+    controller: App\Controller\LanguageController::changeLanguage
+    requirements:
+        _locale: en|fr

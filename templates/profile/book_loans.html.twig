@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'loan_history'|trans }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'loan_history_of'|trans({'%name%': user.nom}) }}</h1>
+
+    <ul>
+        {% for loan in bookLoans %}
+            <li>{{ loan.book.title }} {{ 'borrowed_on'|trans }} {{ loan.date_emprunt|date('d/m/Y') }}</li>
+        {% else %}
+            <li>{{ 'no_loans_found'|trans }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

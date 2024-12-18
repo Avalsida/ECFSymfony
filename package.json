@@ -1,0 +1,21 @@
+{
+  "name": "your-project-name",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "encore dev --watch",
+    "build": "encore production"
+  },
+  "dependencies": {
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
+    "fullcalendar": "^6.1.15",
+    "star-rating.js": "^4.3.1"
+  },
+  "devDependencies": {
+    "@symfony/webpack-encore": "^5.0.1",
+    "webpack-notifier": "^1.15.0"
+  }
+}

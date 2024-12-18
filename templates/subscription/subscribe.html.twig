@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'subscribe_to_membership'|trans }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5 content-container">
+    <h1 class="text-center">{{ 'subscribe_to_membership'|trans }}</h1>
+    {% if message %} 
+        <div class="alert alert-info"> 
+            {{ message }} 
+        </div> 
+    {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            {{ form_start(form) }}
+                <div class="mb-3">
+                    {{ form_label(form.type) }}
+                    <div class="form-check">
+                        {% for choice in form.type %}
+                            <div class="form-check">
+                                {{ form_widget(choice, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(choice, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {{ form_errors(form.type) }}
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">{{ 'subscribe'|trans }}</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
