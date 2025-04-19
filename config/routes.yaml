@@ -12,3 +12,7 @@ change_language:
     controller: App\Controller\LanguageController::changeLanguage
     requirements:
         _locale: en|fr
+
+default_redirect:
+    path: /
+    controller: App\Controller\HomeController::redirectToLocale

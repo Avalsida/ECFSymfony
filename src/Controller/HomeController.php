@@ -10,12 +10,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
-    // #[Route('/', name: 'default_redirect')] 
-    // public function redirectToLocale(Request $request): RedirectResponse 
-    // { 
-    //     $locale = $request->getPreferredLanguage(['en', 'fr']);
-    //      // Détermine la langue préférée de l'utilisateur 
-    //      return new RedirectResponse('/' . $locale . '/'); }
+    #[Route('/', name: 'default_redirect')] 
+    public function redirectToLocale(Request $request): RedirectResponse 
+    { 
+        $locale = $request->getPreferredLanguage(['en', 'fr']);
+         // Détermine la langue préférée de l'utilisateur 
+         return new RedirectResponse('/' . $locale . '/'); }
     
     #[Route('/', name: 'app_home')]
     public function index(): Response
